@@ -1,0 +1,12 @@
+Lab 2
+
+Sorting
+/*@ requires A!= null
+  @ ensures (\forall int i; 0<=i && i<=A.length-1; A[i]<=A[i+1])
+  @*/
+
+Searching 
+/*@ requires A!=null , key
+  @ ensures \not_modified(A) && \only_accessed(A)
+  @ ensures A[\result] == key || \result == -1 
+  @*/
