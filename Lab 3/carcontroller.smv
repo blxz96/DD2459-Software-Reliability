@@ -1,0 +1,73 @@
+MODULE main
+
+-- EXERCISE
+-- This is an exercise in model-based test case generation.
+-- The idea is to write trap properties that achieve 100% NC 
+-- and 100% EC. Then we use NuSMV -bmc to generate test cases satisfying
+-- every test requirement. 
+
+-- ACTIVITIES
+-- 1. Execute this file as it is with the command NuSMV -bmc.
+-- 2. Observe and make sure you understand what you see.
+-- 3. Then edit the file to answer the 2 questions below.
+-- You should have a final total of 9 test requirements.
+-- 4. Execute this file again with the command NuSMV -bmc.
+-- 5. Extract and write down the generated test case for each 
+-- of your 9 test requirements.
+
+
+VAR
+-- system output
+	state : {stop, slow, fast};
+IVAR
+-- system inputs
+	accelerate: boolean;
+	brake: boolean;
+
+ASSIGN
+	init(state) := stop;
+	next(state) := case
+		      accelerate & !brake & state = stop : slow;
+		      accelerate & !brake & state = slow : fast;
+		      !accelerate & !brake & state = fast : slow;
+		      !accelerate & !brake & state = slow : stop;
+		      brake : stop;
+		      TRUE : state;
+	esac;
+
+-- 1 trap property for node coverage (which node?) 
+-- Ans: state = stop
+LTLSPEC 
+	G( !(state = stop))
+
+-- Question 1. Write down the remaining 2 NC trap properties yourself
+
+-- For node coverage state = slow
+LTLSPEC 
+	G( !(state = slow))
+-- For node coverage state = fast
+LTLSPEC 
+	G( !(state = fast))
+
+-- 1 trap property for edge coverage (which edge?)
+-- Ans: For edge coverage stop to slow
+LTLSPEC 
+	G( state=stop & accelerate -> X( !(state=slow) ) )
+
+-- Question 2. Write down the remaining 5 EC trap properties yourself
+
+-- For edge coverage slow to stop with brake
+LTLSPEC
+	G( state = slow & brake -> X( !(state = stop) ) )
+-- For edge coverage slow to stop with not acceleration
+LTLSPEC
+	G( state = slow & !accelerate & !brake -> X( !(state = stop) ) )
+-- For edge coverage slow to fast with acceleration
+LTLSPEC
+	G( state = slow & !brake & accelerate -> X( !(state = fast)  ) )
+-- For edge coverage fast to slow with not acceleration
+LTLSPEC 
+	G( state = fast & !accelerate & !brake  -> X( !(state = slow)  ) )
+-- For edge coverage fast to stop with brake
+LTLSPEC
+	G( state = fast & brake -> X( !(state = stop)  ) )

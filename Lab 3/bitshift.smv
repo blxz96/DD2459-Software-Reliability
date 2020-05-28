@@ -1,0 +1,63 @@
+MODULE main 
+
+-- EXERCISE
+-- This is an exercise in writing .smv files,
+-- executing them, and understanding the output you see from NuSMV
+
+-- ACTIVITIES
+-- 1. Fill in the missing smv definitions below (see To Do)
+-- 2. Then run this file with NuSMV -bmc and make sure you understand 
+-- the output you see.
+
+VAR 
+-- system outputs
+    Bit1 : boolean; -- Boolean variable
+    Bit2 : boolean;
+    state : { s1, s2, s3, s4 }; -- scalar variable
+
+IVAR
+-- system inputs
+    input : boolean;
+
+ASSIGN
+    init(state) := s1;
+    init(Bit1) := FALSE;
+    init(Bit2) := FALSE; 
+
+    next( state ) := case
+       state = s1 & input = TRUE : s2;
+       state = s2 & input = FALSE : s3;
+       state = s2 & input = TRUE : s4;
+       state = s3 & input = FALSE : s1;
+       state = s3 & input = TRUE : s2;
+       state = s4 & input = FALSE : s3;
+       TRUE : state; 
+       -- why?
+       -- Suppose state = s1 & input = FALSE, bit 1 and bit 2 will still be 0, remains in s1
+       -- Suppose state = s4 & input = TRUE, bit 1 and bit 2 will still be 1, remains in s4
+    esac;
+
+    next( Bit1 ) := case
+        Bit1 = TRUE & input = FALSE : FALSE;
+        Bit1 = FALSE & input = TRUE : TRUE;
+        TRUE : Bit1;
+     esac;
+
+    next( Bit2 ) := case 
+        Bit1 = TRUE & Bit2 = FALSE : TRUE;
+        Bit1 = FALSE & Bit2 = TRUE : FALSE;
+        TRUE : Bit2;
+    esac;  
+
+LTLSPEC 
+   G ( Bit1 <-> (X Bit2) )
+   -- the value of Bit1 now always equals the 
+   -- value of Bit2 in the next time step
+   -- This is obviously TRUE!
+
+LTLSPEC 
+G ( Bit1 <-> (X Bit1) )
+   -- the value of Bit1 now always equals the 
+   -- value of Bit1 in the next time step
+   -- This is obviously FALSE!
+
