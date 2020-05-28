@@ -4,12 +4,22 @@ This repository will record down what I have learnt and implemented as an exchan
 
 The course covers the following topics:  
 
-software testing concepts according to the V-model
-graphical requirements modeling, including use case modeling
-logical requirements modeling, including preconditions, postconditions and class invariants
-graph coverage models
-logic coverage models
-input space partitioning
-syntax based testing
-reliability models
-advanced topics such as automated and model based testing.  
+1.software testing concepts according to the V-model
+
+2.graphical requirements modeling, including use case modeling
+
+3.logical requirements modeling, including preconditions, postconditions and class invariants
+
+4.graph coverage models
+
+5.logic coverage models
+
+6.input space partitioning
+
+7.syntax based testing
+
+8.reliability models
+
+9.advanced topics such as automated and model based testing.  
+
+Visit https://www.kth.se/student/kurser/kurs/DD2418?l=en for more information on the course.
